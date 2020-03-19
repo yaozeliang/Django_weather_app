@@ -1,0 +1,1 @@
+A weather app copied from others for learning Django
