@@ -14,7 +14,7 @@ def index(request):
 
     err_msg = ''
     message = ''
-    message_class= ''
+    message_class= ""
 
     if request.method == 'POST':
         form = CityForm(request.POST)
