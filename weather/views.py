@@ -4,6 +4,8 @@ import requests
 from django.shortcuts import render,redirect
 from .models import City
 from .forms import CityForm
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -12,9 +14,8 @@ def index(request):
 
     cities = City.objects.all()
 
-    err_msg = ''
-    message = ''
-    message_class= ""
+    success_add=''
+    msg_class=''
 
     if request.method == 'POST':
         form = CityForm(request.POST)
@@ -26,18 +27,18 @@ def index(request):
                 if r['cod']==200:
                     form.save()
                 else:
-                    err_msg = f'{new_city} not found in the world'
+                    messages.error(request, f'{new_city} not found in the world')
+                    success_add='no'
 
             else:
-                err_msg=f'{exist_city}already exists in Database'
+                messages.warning(request, f'{new_city} already exists in Database')
+                success_add='no'
         
-        if err_msg:
-            message=err_msg
-            message_class='is-danger'
+        if success_add=='':
+            messages.success(request, 'City added Successfully !')
+            msg_class='is-success'
         else:
-            message=f'{new_city} added Successfully !'
-            message_class='is-success'
-
+            msg_class='is-danger'
 
     form = CityForm()
 
@@ -59,8 +60,7 @@ def index(request):
 
     context = {'weather_data':weather_data,
                'form': form,
-               'message':message,
-               'message_class':message_class}
+               'msg_class':msg_class}
 
     return render(request,'weather/weather.html',context)
 
@@ -69,4 +69,3 @@ def index(request):
 def delete_city(request,city_name):
     City.objects.get(name=city_name).delete()
     return redirect('home')
-#  (r['main']['temp']-32)* 5/9,
