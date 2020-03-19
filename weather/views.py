@@ -29,13 +29,13 @@ def index(request):
                     err_msg = f'{new_city} not found in the world'
 
             else:
-                err_msg='City already exists in Database'
+                err_msg=f'{exist_city}already exists in Database'
         
         if err_msg:
             message=err_msg
             message_class='is-danger'
         else:
-            message='City added Successfully !'
+            message=f'{new_city} added Successfully !'
             message_class='is-success'
 
 
